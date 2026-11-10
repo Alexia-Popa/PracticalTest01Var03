@@ -1,10 +1,7 @@
 package ro.pub.cs.systems.eim.practicaltest01var03
 
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -106,53 +103,7 @@ class PracticalTest01Var03Main : AppCompatActivity() {
         dif = savedInstanceState.getInt("total_dif_key", 0)
         summaryEditText.setText("Suma: $sum | Dif: $dif")
     }
-    private val SERVICE_THRESHOLD = 2 // [AICI SCHIMBI]: Pragul cerut (ex: 2 RON)
-    private var serviceStarted = false
-
-    // b) Declararea BroadcastReceiver-ului
-    private val messageBroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            // Afișăm mesajul primit în Logcat folosind eticheta cerută
-            Log.d("PracticalTest03Broadcast", intent?.getStringExtra("message") ?: "Empty")
-        }
-    }
-    private val intentFilter = IntentFilter().apply {
-        addAction("ro.pub.cs.systems.eim.action1")
-        addAction("ro.pub.cs.systems.eim.action2")
-    }
-    private fun checkAndStartService() {
-        if (totalPrice > SERVICE_THRESHOLD && !serviceStarted) {
-            val intent = Intent(this, PracticalTest03Service::class.java).apply {
-                putExtra("total_price_key", totalPrice)
-            }
-            startService(intent)
-            serviceStarted = true
-        }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(messageBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(messageBroadcastReceiver, intentFilter)
-        }
-    }
-
-    // f) Dezînregistrarea Receiver-ului în onPause()
-    override fun onPause() {
-        unregisterReceiver(messageBroadcastReceiver)
-        super.onPause()
-    }
-
-    // g) Oprirea Serviciului la distrugerea activității în onDestroy()
-    override fun onDestroy() {
-        val intent = Intent(this, PracticalTest01Var03Service::class.java)
-        stopService(intent)
-        super.onDestroy()
-    }
-
+    
 
 }
 
